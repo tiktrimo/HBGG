@@ -5,10 +5,14 @@ import reportWebVitals from "./reportWebVitals";
 import FrontPage from "./component/FrontPage.jsx";
 import firebase from "firebase/app";
 import "firebase/database";
+import "firebase/storage";
+import "firebase/analytics";
 import key from "./key/key";
 
 firebase.initializeApp(key);
 export const database = firebase.database();
+export const storage = firebase.storage();
+export const analytics = firebase.analytics();
 
 ReactDOM.render(<FrontPage />, document.getElementById("root"));
 

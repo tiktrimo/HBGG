@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Button, ButtonGroup } from "@material-ui/core";
+import { Button, ButtonGroup, Grid } from "@material-ui/core";
 import { analytics } from "..";
+import ControlledTooltip from "./ControlledTooltip";
 
 const BUTTON_SELECTED_COLOR = "#dedede";
 const BUTTON_DEFAULT_COLOR = "#F5F5F5";
@@ -9,26 +10,42 @@ export default function RangeSelector(props) {
   const [range, setRange] = useState(864);
 
   return (
-    <ButtonGroup size="small" variant="text">
-      {[2, 6, 12, 36, 72, 144, 288, 864, 2016].map((time) => {
-        return (
-          <Button
-            key={`${time}TickerButton`}
-            style={{
-              backgroundColor:
-                range === time ? BUTTON_SELECTED_COLOR : BUTTON_DEFAULT_COLOR,
-            }}
-            onClick={() => {
-              analytics.logEvent(`custom_range_click${time}`);
-              setRange(time);
-              props?.setRange(time);
-            }}
-          >
-            {getTimeTxt(time)}
-          </Button>
-        );
-      })}
-    </ButtonGroup>
+    <ControlledTooltip
+      title="범위를 지정해보세요"
+      placement="right"
+      open={props.showHelp}
+      arrow
+    >
+      <Grid
+        style={{ width: "auto" }}
+        container
+        alignContent="center"
+        justify="center"
+      >
+        <ButtonGroup size="small" variant="text">
+          {[2, 6, 12, 36, 72, 144, 288, 864, 2016].map((time) => {
+            return (
+              <Button
+                key={`${time}TickerButton`}
+                style={{
+                  backgroundColor:
+                    range === time
+                      ? BUTTON_SELECTED_COLOR
+                      : BUTTON_DEFAULT_COLOR,
+                }}
+                onClick={() => {
+                  analytics.logEvent(`custom_range_click${time}`);
+                  setRange(time);
+                  props?.setRange(time);
+                }}
+              >
+                {getTimeTxt(time)}
+              </Button>
+            );
+          })}
+        </ButtonGroup>
+      </Grid>
+    </ControlledTooltip>
   );
 }
 

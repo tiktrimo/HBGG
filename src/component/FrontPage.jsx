@@ -6,6 +6,7 @@ import NivoChart from "./NivoChart";
 import { parse } from "zipson";
 import SnapshotUtil from "../services/SnapshotUtil";
 import Informations from "./Informations";
+import ControlledTooltip from "./ControlledTooltip";
 
 export default function FrontPage(props) {
   const [tickerSnapshotsRaw, setTickerSnapshotsRaw] = useState([]);
@@ -15,6 +16,8 @@ export default function FrontPage(props) {
 
   const childAddedCallbackRef = useRef(); // save function reference for remove listener at unmount;
   const isCallbackReadyRef = useRef(false); // isCallbackReadyRef is used to ignore tickerSnapshotAdded once. Firebase child_added listener return child at subscription. so first callback need to be ignored
+
+  const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
     // Fetch tickersnapshotRaw from firebase realtime database
@@ -59,14 +62,26 @@ export default function FrontPage(props) {
 
   return (
     <React.Fragment>
-      <Grid style={{ width: "100%", height: "80vh" }}>
-        <NivoChart tickerSnapshots={tickerSnapshots} range={range} />
-      </Grid>
+      <ControlledTooltip
+        open={showHelp}
+        title="범례를 누르면 특정 티커만 표시할 수 있어요"
+        placement="bottom-end"
+      >
+        <Grid style={{ width: "100%", height: "80vh" }}>
+          <NivoChart
+            tickerSnapshots={tickerSnapshots}
+            range={range}
+            showHelp={showHelp}
+          />
+        </Grid>
+      </ControlledTooltip>
       <Grid style={{ width: "100%", minHeight: 180 }}>
         <Informations
           tickerSnapshots={tickerSnapshots}
           range={range}
           setRange={setRange}
+          showHelp={showHelp}
+          setShowHelp={setShowHelp}
         />
       </Grid>
     </React.Fragment>

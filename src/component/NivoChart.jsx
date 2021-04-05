@@ -3,6 +3,7 @@ import { ResponsiveLine } from "@nivo/line";
 import { Paper, Typography } from "@material-ui/core";
 import SnapshotUtil from "../services/SnapshotUtil";
 import { Skeleton } from "@material-ui/lab";
+import ControlledTooltip from "./ControlledTooltip";
 
 const RED_BULE = [
   "#bf0000",

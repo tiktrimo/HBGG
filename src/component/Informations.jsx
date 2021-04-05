@@ -2,14 +2,18 @@ import React from "react";
 import {
   Button,
   ButtonGroup,
+  ClickAwayListener,
   Grid,
   Paper,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import BugReportIcon from "@material-ui/icons/BugReport";
+import HelpIcon from "@material-ui/icons/Help";
 import Statistics from "./Statistics.jsx";
 import RangeSelector from "./RangeSelector.jsx";
+import ControlledTooltip from "./ControlledTooltip.jsx";
 
 const LinkButtonGroup = (props) => {
   return (
@@ -19,22 +23,55 @@ const LinkButtonGroup = (props) => {
           HBGG
         </Typography>
       </Button>
-      <Button href={"https://github.com/tiktrimo/HBGG"} target="_blank">
-        <GitHubIcon />
-      </Button>
+      <ControlledTooltip
+        title="쓸만하셨다면 별 한번 눌러주세요 ㅎㅎ"
+        open={props.showHelp}
+        placement="top-end"
+        arrow
+      >
+        <Button href={"https://github.com/tiktrimo/HBGG"} target="_blank">
+          <GitHubIcon />
+        </Button>
+      </ControlledTooltip>
     </ButtonGroup>
+  );
+};
+
+const HelpButton = (props) => {
+  return (
+    <ClickAwayListener
+      onClickAway={() => {
+        props.setShowHelp(false);
+      }}
+    >
+      <Button
+        style={{ position: "absolute", left: 0, bottom: 0, height: 35 }}
+        onClick={() => {
+          props.setShowHelp(true);
+        }}
+      >
+        <HelpIcon fontSize="small" />
+      </Button>
+    </ClickAwayListener>
   );
 };
 
 const BugReportButton = (props) => {
   return (
-    <Button
-      style={{ position: "absolute", right: 0, bottom: 0, height: 35 }}
-      href={"https://github.com/tiktrimo/HBGG/issues"}
-      target="_blank"
+    <ControlledTooltip
+      title="건의하실 사항이나 이상한 점이 있다면 자유롭게 적어주세요"
+      open={props.showHelp}
+      placement="left"
+      arrow
     >
-      <BugReportIcon fontSize="small" />
-    </Button>
+      <Button
+        style={{ position: "absolute", right: 0, bottom: 0, height: 35 }}
+        href={"https://github.com/tiktrimo/HBGG/issues"}
+        target="_blank"
+      >
+        <BugReportIcon fontSize="small" />
+      </Button>
+    </ControlledTooltip>
   );
 };
 
@@ -54,11 +91,12 @@ export default function Informations(props) {
         <Statistics
           tickerSnapshots={props.tickerSnapshots}
           range={props.range}
+          showHelp={props.showHelp}
         />
       </Grid>
 
       <Grid style={{ paddingTop: 15 }} justify="center" container>
-        <RangeSelector setRange={props.setRange} />
+        <RangeSelector setRange={props.setRange} showHelp={props.showHelp} />
       </Grid>
 
       <Grid
@@ -66,8 +104,9 @@ export default function Informations(props) {
         justify="center"
         container
       >
-        <LinkButtonGroup />
-        <BugReportButton />
+        <HelpButton setShowHelp={props.setShowHelp} />
+        <LinkButtonGroup showHelp={props.showHelp} />
+        <BugReportButton showHelp={props.showHelp} />
       </Grid>
     </Paper>
   );

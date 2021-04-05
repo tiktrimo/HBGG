@@ -1,7 +1,8 @@
-import { Paper, Typography } from "@material-ui/core";
+import { Grid, Paper, Typography } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
 import StatisticUtil from "../services/StatisticUtil";
+import ControlledTooltip from "./ControlledTooltip";
 
 const RANGE_CAP = 2016; // 7days / 5min = 2016
 const TICKER_POSITIVE = "#bf0000";
@@ -51,23 +52,36 @@ export default function Statistics(props) {
   }, [props.range, props.tickerSnapshots]);
 
   return (
-    <React.Fragment>
-      {statisticData.length === 0 ? (
-        <Skeleton width={540} height={54} animation="wave" variant="rect" />
-      ) : (
-        statisticData.map((statisticDatum, index) => {
-          return (
-            <TickerSquare
-              key={`${statisticDatum.ticker}TickerSquare`}
-              ticker={statisticDatum.ticker}
-              count={statisticDatum.count}
-              prevCount={prevStatisticData[index].count}
-              range={props.range}
-            />
-          );
-        })
-      )}
-    </React.Fragment>
+    <ControlledTooltip
+      title="선택한 범위에서의 언급수를 합산한 값이에요"
+      placement="right"
+      open={props.showHelp}
+      arrow
+    >
+      <Grid
+        style={{ width: "auto" }}
+        container
+        alignContent="center"
+        justify="center"
+      >
+        {statisticData.length === 0 ? (
+          <Skeleton width={540} height={54} animation="wave" variant="rect" />
+        ) : (
+          statisticData.map((statisticDatum, index) => {
+            return (
+              <TickerSquare
+                key={`${statisticDatum.ticker}TickerSquare`}
+                ticker={statisticDatum.ticker}
+                count={statisticDatum.count}
+                prevCount={prevStatisticData[index].count}
+                range={props.range}
+                showHelp={props.showHelp}
+              />
+            );
+          })
+        )}
+      </Grid>
+    </ControlledTooltip>
   );
 }
 

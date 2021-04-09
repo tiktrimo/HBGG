@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import {
   Button,
   ButtonGroup,
   ClickAwayListener,
   Grid,
   Paper,
-  Tooltip,
+  Popper,
   Typography,
 } from "@material-ui/core";
 import GitHubIcon from "@material-ui/icons/GitHub";
@@ -14,26 +14,57 @@ import HelpIcon from "@material-ui/icons/Help";
 import Statistics from "./Statistics.jsx";
 import RangeSelector from "./RangeSelector.jsx";
 import ControlledTooltip from "./ControlledTooltip.jsx";
+import TagSelector from "./TagSelector.jsx";
 
 const LinkButtonGroup = (props) => {
+  const [tagsOpen, setTagsOpen] = useState(false);
+
+  const anchorEl = useRef(undefined);
+
   return (
-    <ButtonGroup size="small" variant="text">
-      <Button href={"https://hbgg-to-the-moon.firebaseapp.com/"}>
-        <Typography style={{ fontSize: 18, fontWeight: 1000 }} align="center">
-          HBGG
-        </Typography>
-      </Button>
-      <ControlledTooltip
-        title="쓸만하셨다면 별 한번 눌러주세요 ㅎㅎ"
-        open={props.showHelp}
-        placement="top-end"
-        arrow
-      >
-        <Button href={"https://github.com/tiktrimo/HBGG"} target="_blank">
-          <GitHubIcon />
+    <React.Fragment>
+      <ButtonGroup size="small" variant="text">
+        <Button
+          ref={anchorEl}
+          style={{ paddingBottom: 0, paddingTop: 5 }}
+          variant="text"
+        >
+          <Typography
+            style={{
+              fontSize: "1.09rem",
+              fontFamily: '"Black Han Sans", sans-serif',
+            }}
+            align="center"
+          >
+            해외주식갤러리
+          </Typography>
         </Button>
-      </ControlledTooltip>
-    </ButtonGroup>
+        <Button href={"https://hbgg-to-the-moon.firebaseapp.com/"}>
+          <Typography
+            style={{ fontSize: "1.1rem", fontWeight: 1000 }}
+            align="center"
+          >
+            HBGG
+          </Typography>
+        </Button>
+        <ControlledTooltip
+          title="쓸만하셨다면 별 한번 눌러주세요 ㅎㅎ"
+          open={props.showHelp}
+          placement="top-end"
+          arrow
+        >
+          <Button href={"https://github.com/tiktrimo/HBGG"} target="_blank">
+            <GitHubIcon />
+          </Button>
+        </ControlledTooltip>
+      </ButtonGroup>
+
+      <Popper
+        open={tagsOpen}
+        anchorEl={anchorEl.current}
+        placement="bottom-start"
+      ></Popper>
+    </React.Fragment>
   );
 };
 

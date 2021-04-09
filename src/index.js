@@ -8,13 +8,17 @@ import "firebase/database";
 import "firebase/storage";
 import "firebase/analytics";
 import key from "./key/key";
+import cacheService from "./cache/cacheService";
 
 firebase.initializeApp(key);
 export const database = firebase.database();
 export const storage = firebase.storage();
 export const analytics = firebase.analytics();
 
-ReactDOM.render(<FrontPage />, document.getElementById("root"));
+const ttl = 60 * 60 * 1;
+const cache = new cacheService(ttl);
+
+ReactDOM.render(<FrontPage cache={cache} />, document.getElementById("root"));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

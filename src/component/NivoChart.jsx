@@ -83,82 +83,90 @@ export default function NivoChart(props) {
   return chartData.length === 0 ? (
     <Skeleton width="100%" height="100%" animation="wave" variant="rect" />
   ) : (
-    <ResponsiveLine
-      data={chartData}
-      margin={{ top: 40, right: 80, bottom: 65, left: 40 }}
-      xScale={{ type: "point" }}
-      yScale={{
-        type: "linear",
-        min: 0,
-        max: "auto",
-        stacked: false,
-        reverse: false,
-      }}
-      curve={props.range <= 288 ? "monotoneX" : "linear"}
-      axisTop={null}
-      axisRight={null}
-      axisBottom={{
-        orient: "bottom",
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: -42,
-        legend: "",
-        legendOffset: 36,
-        legendPosition: "middle",
-        format: getXformat(props.range, width),
-      }}
-      axisLeft={{
-        orient: "left",
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: "",
-        legendOffset: -40,
-        legendPosition: "middle",
-        format: (value) => {
-          return Math.floor(value) === Number(value) ? value : "";
-        },
-      }}
-      colors={highlightColorSelector(chartData, highlightID)}
-      enableGridX={false}
-      enableGridY={false}
-      enablePoints={false}
-      pointSize={5}
-      pointColor={{ from: "color", modifiers: [] }}
-      pointBorderWidth={1}
-      pointBorderColor={{ from: "serieColor" }}
-      pointLabelYOffset={-12}
-      enableSlices="x"
-      sliceTooltip={getSliceTooltip}
-      useMesh={true}
-      legends={[
-        {
-          anchor: "bottom-right",
-          direction: "column",
-          justify: false,
-          translateX: 100,
-          translateY: 0,
-          itemsSpacing: 0,
-          itemDirection: "left-to-right",
-          itemWidth: 80,
-          itemHeight: 20,
-          itemOpacity: 0.75,
-          symbolSize: 12,
-          symbolShape: "circle",
-          symbolBorderColor: "rgba(0, 0, 0, .5)",
-          effects: [
-            {
-              on: "hover",
-              style: {
-                itemBackground: "rgba(0, 0, 0, .03)",
-                itemOpacity: 1,
-              },
+    <ControlledTooltip
+      open={props.showHelp}
+      title="범례를 누르면 특정 티커만 표시할 수 있어요"
+      placement="bottom-end"
+    >
+      <div style={{ width: "100%", height: "100%" }}>
+        <ResponsiveLine
+          data={chartData}
+          margin={{ top: 40, right: 80, bottom: 60, left: 40 }}
+          xScale={{ type: "point" }}
+          yScale={{
+            type: "linear",
+            min: 0,
+            max: "auto",
+            stacked: false,
+            reverse: false,
+          }}
+          curve={props.range <= 288 ? "monotoneX" : "linear"}
+          axisTop={null}
+          axisRight={null}
+          axisBottom={{
+            orient: "bottom",
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: -42,
+            legend: "",
+            legendOffset: 36,
+            legendPosition: "middle",
+            format: getXformat(props.range, width),
+          }}
+          axisLeft={{
+            orient: "left",
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: "",
+            legendOffset: -40,
+            legendPosition: "middle",
+            format: (value) => {
+              return Math.floor(value) === Number(value) ? value : "";
             },
-          ],
-          onClick: highlightOnClickHandler(highlightID, setHighlightID),
-        },
-      ]}
-    />
+          }}
+          colors={highlightColorSelector(chartData, highlightID)}
+          enableGridX={false}
+          enableGridY={false}
+          enablePoints={false}
+          pointSize={5}
+          pointColor={{ from: "color", modifiers: [] }}
+          pointBorderWidth={1}
+          pointBorderColor={{ from: "serieColor" }}
+          pointLabelYOffset={-12}
+          enableSlices="x"
+          sliceTooltip={getSliceTooltip}
+          useMesh={true}
+          legends={[
+            {
+              anchor: "bottom-right",
+              direction: "column",
+              justify: false,
+              translateX: 80,
+              translateY: 0,
+              itemsSpacing: 0,
+              itemDirection: "left-to-right",
+              itemWidth: 65,
+              itemHeight: 20,
+              itemOpacity: 0.75,
+              symbolSize: 12,
+              symbolShape: "circle",
+              symbolBorderColor: "rgba(0, 0, 0, .5)",
+              effects: [
+                {
+                  on: "hover",
+                  style: {
+                    itemBackground: "rgba(0, 0, 0, .03)",
+                    itemOpacity: 1,
+                  },
+                },
+              ],
+              onClick: highlightOnClickHandler(highlightID, setHighlightID),
+            },
+          ]}
+        />
+      </div>
+    </ControlledTooltip>
   );
 }
 

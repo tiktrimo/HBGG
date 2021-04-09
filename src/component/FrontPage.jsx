@@ -7,6 +7,7 @@ import { parse } from "zipson";
 import SnapshotUtil from "../services/SnapshotUtil";
 import Informations from "./Informations";
 import ControlledTooltip from "./ControlledTooltip";
+import TagSelector from "./TagSelector";
 
 export default function FrontPage(props) {
   const [tickerSnapshotsRaw, setTickerSnapshotsRaw] = useState([]);
@@ -29,14 +30,12 @@ export default function FrontPage(props) {
     // attach listener to database. updated child is set by setTickerSnapshotAdded
     childAddedCallbackRef.current = childAddedCallback(setTickerSnapshotAdded);
     database
-      .ref("/archive/tickers")
+      .ref("DCHJG/archive/tickers")
       .limitToLast(1)
       .on("child_added", childAddedCallbackRef.current);
 
     return () => {
-      database
-        .ref("/archive/tickers")
-        .off("child_added", childAddedCallbackRef.current);
+      database.ref("DCHJG/archive/tickers").off("child_added");
     };
   }, []);
 
@@ -62,19 +61,14 @@ export default function FrontPage(props) {
 
   return (
     <React.Fragment>
-      <ControlledTooltip
-        open={showHelp}
-        title="범례를 누르면 특정 티커만 표시할 수 있어요"
-        placement="bottom-end"
-      >
-        <Grid style={{ width: "100%", height: "80vh" }}>
-          <NivoChart
-            tickerSnapshots={tickerSnapshots}
-            range={range}
-            showHelp={showHelp}
-          />
-        </Grid>
-      </ControlledTooltip>
+      <Grid style={{ width: "100%", height: "80vh" }}>
+        <NivoChart
+          tickerSnapshots={tickerSnapshots}
+          range={range}
+          showHelp={showHelp}
+        />
+      </Grid>
+
       <Grid style={{ width: "100%", minHeight: 180 }}>
         <Informations
           tickerSnapshots={tickerSnapshots}
@@ -94,7 +88,7 @@ async function fetchTickerSnapshotsRaw() {
   const storageTickerSnapshotsSet = await Promise.all(
     last6Days.map(async (date) => {
       return await storage
-        .ref(`archive/tickers/${date}`)
+        .ref(`DCHJG/archive/tickers/${date}`)
         .getDownloadURL()
         .then(async (url) => {
           return await fetch(url)
@@ -106,7 +100,7 @@ async function fetchTickerSnapshotsRaw() {
   );
 
   const databaseTickerSnapshots = await database
-    .ref("/archive/tickers")
+    .ref("DCHJG/archive/tickers")
     .once("value")
     .then((data) => data.val());
 
@@ -131,7 +125,7 @@ async function getLast6Days() {
   );
 
   const isYesterdayExistInStorage = await storage
-    .ref(`archive/tickers/${last7Days.slice(-1).pop()}`)
+    .ref(`DCHJG/archive/tickers/${last7Days.slice(-1).pop()}`)
     .getDownloadURL()
     .then((url) => true)
     .catch((e) => false);

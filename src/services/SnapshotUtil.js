@@ -18,17 +18,16 @@ export default class SnapshotUtil {
 
     const baseTickers = Object.entries(tickerSnapshots).reduce(
       (acc, [time, tickers]) => {
+        delete tickers.isEmpty;
         Object.keys(tickers).forEach((ticker) => {
           if (acc[ticker] === undefined) acc[ticker] = 0;
         });
-
         return acc;
       },
       {}
     );
 
     Object.entries(tickerSnapshots).forEach(([time, tickers]) => {
-      tickers["isEmpty"] = undefined;
       tickerSnapshots[time] = { ...baseTickers, ...tickers };
     });
 
